@@ -10,16 +10,19 @@ def fundamentals_agent(state: AgentState):
     """Analyzes fundamental data and generates trading signals."""
     show_reasoning = state["metadata"]["show_reasoning"]
     data = state["data"]
-    metrics = data["financial_metrics"][0]
-    financial_line_item = data["financial_line_items"][0]
-    market_cap = data["market_cap"]
+    metrics = eval(data["financial_metrics"])[0]
+    financial_line_item = eval(data["financial_line_items"])[0]
+    market_cap = eval(data["market_cap"])[0]
 
     # Initialize signals list for different fundamental aspects
     signals = []
     reasoning = {}
-    
+
     # 1. Profitability Analysis
     profitability_score = 0
+    print(type(metrics))
+    print(metrics)
+    print(metrics["return_on_equity"])
     if metrics["return_on_equity"] > 0.15:  # Strong ROE above 15%
         profitability_score += 1
     if metrics["net_margin"] > 0.20:  # Healthy profit margins
@@ -83,7 +86,8 @@ def fundamentals_agent(state: AgentState):
     }
 
     # 5. Calculate intrinsic value and compare to market cap
-    free_cash_flow = financial_line_item.get('free_cash_flow')
+    # free_cash_flow = financial_line_item.get('free_cash_flow')
+    free_cash_flow = metrics['free_cash_flow']
     intrinsic_value = calculate_intrinsic_value(
         free_cash_flow=free_cash_flow,
         growth_rate=metrics["earnings_growth"],

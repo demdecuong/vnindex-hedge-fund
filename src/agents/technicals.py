@@ -25,6 +25,7 @@ def technical_analyst_agent(state: AgentState):
     show_reasoning = state["metadata"]["show_reasoning"]
     data = state["data"]
     prices = data["prices"]
+
     prices_df = prices_to_df(prices)
     
     # Calculate indicators

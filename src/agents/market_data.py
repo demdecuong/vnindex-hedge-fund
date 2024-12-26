@@ -36,13 +36,13 @@ def market_data_agent(state: AgentState):
     financial_metrics = get_financial_metrics(
         ticker=data["ticker"], 
         report_period=end_date, 
-        period='ttm', 
+        period='year',
         limit=1,
     )
 
     # Get the insider trades
     insider_trades = get_insider_trades(
-        ticker=data["ticker"], 
+        ticker=data["ticker"],
         end_date=end_date,
         limit=5,
     )
@@ -56,7 +56,7 @@ def market_data_agent(state: AgentState):
     financial_line_items = search_line_items(
         ticker=data["ticker"], 
         line_items=["free_cash_flow"],
-        period='ttm',
+        period='year',
         limit=1,
     )
 
@@ -65,7 +65,7 @@ def market_data_agent(state: AgentState):
         "data": {
             **data, 
             "prices": prices, 
-            "start_date": start_date, 
+            "start_date": start_date,
             "end_date": end_date,
             "financial_metrics": financial_metrics,
             "insider_trades": insider_trades,
