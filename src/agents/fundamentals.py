@@ -52,19 +52,38 @@ def fundamentals_agent(state: AgentState):
     
     # 3. Financial Health
     health_score = 0
-    if metrics["current_ratio"] > 1.5:  # Strong liquidity
-        health_score += 1
-    if metrics["debt_to_equity"] < 0.5:  # Conservative debt levels
-        health_score += 1
-    if metrics["free_cash_flow_per_share"] > metrics["earnings_per_share"] * 0.8:  # Strong FCF conversion
-        health_score += 1
-        
+    try:
+        if metrics["current_ratio"] > 1.5:  # Strong liquidity
+            health_score += 1
+    except Exception as e:
+        print('Current Ratio is missing')
+        metrics["current_ratio"] = None
+    try:
+        if metrics["debt_to_equity"] < 0.5:  # Conservative debt levels
+            health_score += 1
+    except Exception as e:
+        print('debt_to_equity is missing')
+        metrics["debt_to_equity"] = None
+
+    try:
+        if metrics["free_cash_flow_per_share"] > metrics["earnings_per_share"] * 0.8:  # Strong FCF conversion
+            health_score += 1
+    except Exception as e:
+        print('free_cash_flow_per_share is missing')
+        metrics["free_cash_flow_per_share"] = None
+
     signals.append('bullish' if health_score >= 2 else 'bearish' if health_score == 0 else 'neutral')
-    reasoning["Financial_Health"] = {
-        "signal": signals[2],
-        "details": f"Current Ratio: {metrics['current_ratio']:.2f}, D/E: {metrics['debt_to_equity']:.2f}"
-    }
-    
+    if metrics['current_ratio'] != None:
+        reasoning["Financial_Health"] = {
+            "signal": signals[2],
+            "details": f"Current Ratio: {metrics['current_ratio']:.2f}, D/E: {metrics['debt_to_equity']:.2f}"
+        }
+    else:
+        reasoning["Financial_Health"] = {
+            "signal": signals[2],
+            "details": f"Current Ratio: {metrics['current_ratio']}, D/E: {metrics['debt_to_equity']}"
+        }
+
     # 4. Price to X ratios
     pe_ratio = metrics["price_to_earnings_ratio"]
     pb_ratio = metrics["price_to_book_ratio"]

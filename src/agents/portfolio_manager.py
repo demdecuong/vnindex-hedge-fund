@@ -84,6 +84,7 @@ def portfolio_management_agent(state: AgentState):
                 Remember, the action must be either buy, sell, or hold.
                 You can only buy if you have available cash.
                 You can only sell if you have shares in the portfolio to sell.
+                All the language output must be in Vietnamese.
                 """
             ),
         ]

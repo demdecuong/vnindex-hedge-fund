@@ -86,6 +86,11 @@ def get_financial_metrics(
     df['price_per_share'] = df['BVPS (VND)'] * df['P/B']
     # Calculate Market Cap
     df['market_cap'] = df['Outstanding Share (Mil. Shares)'] * df['price_per_share']
+    try:
+        df['operating_margin'] = df['Operating Profit before Provision'] / df['Revenue (Bn. VND)']
+    except:
+        print('Can not calculate operating_margin')
+        pass
 
     # rename
     df = df.rename(columns={
