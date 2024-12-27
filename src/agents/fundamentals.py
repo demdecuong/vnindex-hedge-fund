@@ -12,7 +12,8 @@ def fundamentals_agent(state: AgentState):
     data = state["data"]
     metrics = eval(data["financial_metrics"])[0]
     financial_line_item = eval(data["financial_line_items"])[0]
-    market_cap = eval(data["market_cap"])[0]
+    # market_cap = eval(data["market_cap"])[0]
+    market_cap = metrics['market_cap']
 
     # Initialize signals list for different fundamental aspects
     signals = []
@@ -20,9 +21,7 @@ def fundamentals_agent(state: AgentState):
 
     # 1. Profitability Analysis
     profitability_score = 0
-    print(type(metrics))
-    print(metrics)
-    print(metrics["return_on_equity"])
+
     if metrics["return_on_equity"] > 0.15:  # Strong ROE above 15%
         profitability_score += 1
     if metrics["net_margin"] > 0.20:  # Healthy profit margins
@@ -95,6 +94,7 @@ def fundamentals_agent(state: AgentState):
         terminal_growth_rate=0.03,
         num_years=5,
     )
+
     if market_cap < intrinsic_value:
         signals.append('bullish')
     else:

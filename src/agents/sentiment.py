@@ -9,7 +9,7 @@ import json
 def sentiment_agent(state: AgentState):
     """Analyzes market sentiment and generates trading signals."""
     data = state["data"]
-    insider_trades = data["insider_trades"]
+    insider_trades = json.loads(data["insider_trades"])
     show_reasoning = state["metadata"]["show_reasoning"]
 
     # Loop through the insider trades, if transaction_shares is negative, then it is a sell, which is bearish, if positive, then it is a buy, which is bullish

@@ -82,6 +82,10 @@ def get_financial_metrics(
     df['free_cash_flow'] = operating_cash_flow - capital_expenditures
     df['free_cash_flow_per_share'] = df['free_cash_flow'] / outstanding_shares
     df['earnings_per_share'] = df['Net Profit For the Year'] / outstanding_shares
+    # Calculate Price Per Share
+    df['price_per_share'] = df['BVPS (VND)'] * df['P/B']
+    # Calculate Market Cap
+    df['market_cap'] = df['Outstanding Share (Mil. Shares)'] * df['price_per_share']
 
     # rename
     df = df.rename(columns={
@@ -97,7 +101,7 @@ def get_financial_metrics(
         "P/B": "price_to_book_ratio",
         "P/S": "price_to_sales_ratio"
     })
-    print(df.head())
+
     financial_metrics = df.to_json(orient='records', date_format='iso')
 
     if not financial_metrics:
@@ -162,8 +166,13 @@ def get_insider_trades(
     """
     company = Vnstock().stock(symbol=ticker, source='TCBS').company
     insider_trades = company.insider_deals()
-    insider_trades = insider_trades[insider_trades['deal_announce_date'] <= end_date].to_json(orient='records',
-                                                                                              date_format='iso')
+    insider_trades = insider_trades[insider_trades['deal_announce_date'] <= end_date]
+
+    insider_trades = insider_trades.rename(columns={
+        "deal_quantity": "transaction_shares"
+    })
+    insider_trades = insider_trades.to_json(orient='records',date_format='iso')
+
     return insider_trades
 
 
